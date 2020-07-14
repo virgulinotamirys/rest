@@ -1,1 +1,7 @@
-Teste.
+Criacao do projeto:
+
+Npm init
+    - nome do projeto, versao, descricao....
+
+Npm install --save express
+
