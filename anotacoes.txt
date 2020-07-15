@@ -5,3 +5,4 @@ Npm init
 
 Npm install --save express
 
+Criar arquivo server.js (principal da api) para utilizar a lib do express
