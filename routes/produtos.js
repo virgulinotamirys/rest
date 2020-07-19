@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const postgres = require('../postgres');
 
 //RETORNA TODOS OS PRODUTOS
 router.get('/', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'Retorna todos os produtos'
+    postgres.pool.query('SELECT * FROM produto', (error, results) => {
+        if (error) {
+            throw error
+        }
+        res.status(200).json(results.rows)
     });
 });
 
+
 //INSERE UM PRODUTO
-router.post('/', (req, res, next) => {
-    const produto = {
+router.post('/inserir', (req, res, next) => {
+    /*const produto = {
         nome: req.body.nome,
         preco: req.body.preco
     };
@@ -18,7 +23,25 @@ router.post('/', (req, res, next) => {
     res.status(201).send({
         mensagem: 'Insere um produto',
         produtoCriado: produto
-    });
+    });*/
+
+    const { id_produto, nome, preco} = req.body;
+    const { rows } = postgres.pool.query(
+        'INSERT INTO produto (id_produto, nome, preco) VALUES ($1, $2, $3)',
+        [id_produto, nome, preco], (err, result) => {
+            if(err){
+                res.status(err.status || 500);
+            }
+            else{
+                res.status(201).send({
+                    message: 'Produto adicionado com sucesso',
+                    body: {
+                        product: { id_produto, nome, preco }
+                    },
+                }); 
+            }
+        }
+    );
 });
 
 //RETORNA OS DADOS DE UM PRODUTO
@@ -31,14 +54,14 @@ router.get('/:id_produto', (req, res, next) => {
 });
 
 //ALTERA UM PRODUTO
-router.patch('/', (req, res, next) =>{
+router.patch('/alterar', (req, res, next) =>{
     res.status(201).send({
         mensagem: 'Produto alterado'
     });
 });
 
 //DELETA UM PRODUTO
-router.delete('/', (req, res, next) => {
+router.delete('/excluir', (req, res, next) => {
     res.status(201).send({
         mensagem: 'Produto excluido'
     });

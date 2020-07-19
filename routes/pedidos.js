@@ -9,8 +9,8 @@ router.get('/', (req, res, next) => {
 });
 
 //INSERE UM PEDIDO
-router.post('/', (req, res, next) => {
-    const pedido ={
+router.post('/inserir', (req, res, next) => {
+    const pedido = {
         id_produto: req.body.id_produto,
         quantidade: req.body.quantidade
     };
@@ -31,7 +31,7 @@ router.get('/:id_pedido', (req, res, next) => {
 });
 
 //DELETA UM PEDIDO
-router.delete('/', (req, res, next) => {
+router.delete('/excluir', (req, res, next) => {
     res.status(201).send({
         mensagem: 'Pedido excluido'
     });

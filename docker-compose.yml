@@ -1,0 +1,39 @@
+version: "3"
+
+services: 
+    app:
+        build: .
+        command: npm start
+        ports: 
+            - "3000:3000"
+        volumes: 
+            - .:/usr/app
+        networks:
+            - postgres-compose-network
+
+    teste-postgres-compose:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: "#senha"
+        ports:
+            - "15432:5432"
+        volumes:
+            - /usr/app
+        networks:
+            - postgres-compose-network
+    
+    teste-pgadmin-compose:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "virgulinotamirys@gmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "#admin1801"
+        ports:
+            - "16543:80"
+        depends_on:
+            - teste-postgres-compose
+        networks:
+            - postgres-compose-network
+
+networks: 
+    postgres-compose-network:
+        driver: bridge

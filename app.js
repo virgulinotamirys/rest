@@ -7,7 +7,7 @@ const rotaProdutos = require('./routes/produtos');
 const rotaPedidos = require('./routes/pedidos');
 
 app.use(morgan('dev')); //retorna um log
-app.use(bodyParser.urlencoded({extended: false})); //apenas dados simples
+app.use(bodyParser.urlencoded({extended: true})); //apenas dados simples
 app.use(bodyParser.json()); //json de entrada
 
 app.use((req, res, next) => {
@@ -21,18 +21,14 @@ app.use((req, res, next) => {
     }
     next();
 });
-
+app.use('/produtos/inserir', rotaProdutos);
 app.use('/produtos', rotaProdutos);
 app.use('/pedidos', rotaPedidos);
-/*app.use('/teste', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'Ok!'
-    });
-});*/
+
 
 //Nao encontra nenhuma rota
 app.use((req, res, next) => {
-    const erro = new Error('Não encontrado');
+    const erro = new Error('Rota não encontrada');
     erro.status = 404;
     next(erro);
 });
@@ -45,5 +41,6 @@ app.use((error, req, res, next) => {
         }
     });
 });
+
 
 module.exports = app;
