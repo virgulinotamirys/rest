@@ -21,7 +21,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.use('/produtos/inserir', rotaProdutos);
 app.use('/produtos', rotaProdutos);
 app.use('/pedidos', rotaPedidos);
 

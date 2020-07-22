@@ -25,8 +25,8 @@ services:
     teste-pgadmin-compose:
         image: dpage/pgadmin4
         environment:
-            PGADMIN_DEFAULT_EMAIL: "virgulinotamirys@gmail.com"
-            PGADMIN_DEFAULT_PASSWORD: "#admin1801"
+            PGADMIN_DEFAULT_EMAIL: "email@gmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "#senha"
         ports:
             - "16543:80"
         depends_on:

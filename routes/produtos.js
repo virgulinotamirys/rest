@@ -45,25 +45,49 @@ router.post('/inserir', (req, res, next) => {
 });
 
 //RETORNA OS DADOS DE UM PRODUTO
-router.get('/:id_produto', (req, res, next) => {
-    const id = req.params.id_produto;
-    res.status(200).send({
-        mensagem: 'Detalhes do produto',
-        id_produto: id
+router.get('/byId/:id_produto', (req, res, next) => {
+    const id_produto = req.params.id_produto;
+    postgres.pool.query('SELECT * FROM produto WHERE id_produto = $1', [id_produto], (error, results) => {
+        if (error) {
+            res.status(error.status || 500);
+        }else{
+            res.status(200).json(results.rows)
+        }
     });
 });
 
 //ALTERA UM PRODUTO
-router.patch('/alterar', (req, res, next) =>{
-    res.status(201).send({
-        mensagem: 'Produto alterado'
-    });
+router.put('/alterar', (req, res, next) =>{
+    const { id_produto, nome, preco} = req.body;
+    postgres.pool.query(
+        'UPDATE produto SET nome = $1, preco = $2 WHERE id_produto = $3',
+        [nome, preco, id_produto], (err, result) => {
+            if(err){
+                res.status(err.status || 500);
+            }
+            else{
+                res.status(201).send({
+                    message: 'Produto alterado com sucesso',
+                    body: {
+                        product: { nome, preco, id_produto }
+                    },
+                }); 
+            }
+        }
+    );
 });
 
 //DELETA UM PRODUTO
-router.delete('/excluir', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'Produto excluido'
+router.delete('/excluir/:id_produto', (req, res, next) => {
+    const id_produto = req.params.id_produto;
+    postgres.pool.query('DELETE FROM produto WHERE id_produto = $1', [id_produto], (error, results) => {
+        if (error) {
+            res.status(error.status || 500);
+        }else{
+            res.status(200).send({
+                message: 'Produto excluido com sucesso'
+            })
+        }
     });
 });
 
